@@ -1,0 +1,87 @@
+- demultiplex reads by index Pair
+- output one forward fastq file per matching index pair
+- output one reverse fastq file per matching index Pair
+- two fastq files for non-matching index pairs (if their indexes don't match)
+- two more files for one or both index reads are unknown or low Quality
+- add the sequence of the index-pair to the header of both reads in all the fastq files for that category
+- algorithm needs to report the number of read pairs w/properly matched pairs
+- number of index hopping events
+- and the number of unknowns
+
+R1 = first biological read
+R2 = index that corresponds to R1
+R3 = index that corresponds to R4
+R4 = second biological read
+
+def rev_comp(DNA_SEQ):
+'''this will return your actual index from your reverse complemented index'''
+Change A's to T's
+Change C's to G's
+Change G's to C's
+Change T's to A's
+return(rev_comp_DNA_SEQ)
+
+def convert_phred(ASCII_SEQ):
+'''this will return the phred scores into the ascii equivalents'''
+use ord to convert the quality scores into their numerical equivalents
+return(CONVERTED_ASCII_SEQ)
+
+def indexed_header(index1, index2):
+  '''This will convert your original head for any header you pass it to the header that contains its paired indexes'''
+  your old header will have index1 + index2 separated by a hyphen
+  index_count = a dictionary that will count the index pairs as the keys and the number of times they appear as the values
+    - set the dictionary such that the default will be the index pair and the value will be zeros
+      - every time a new index pair is found, it'll be added to the dictionary and the zero will be updated to 1
+      - if the key already exists, update the value by 1
+      - NOTE: your dictionary should have 24 keys
+  return(NEW_HEADER_LINE)
+
+paired_reads = 0
+undetermined = 0
+swapped = 0
+
+NOTE: IMPORTANT -- YOU SHOULD HAVE 24 PAIRED INDEX FILES (one for each index), AND YOU SHOULD COUNT THE NUMBER OF TIMES THESE PAIRS OCCURRED
+read through all four files, pull out the first four lines of each file and store them into corresponding lists:
+  R1 = [L1, L2, L3, L4]
+  R2 = [L1, L2, L3, L4]
+  etc.
+  - use <filename>.readline() to pull out each individual line
+  - set the lists locally so they are updated every time you get to a new record
+  - L1 = header line, L2 = index, L3, = +, L4 = quality score
+
+  for each DNA sequence in R3:
+    convert each DNA sequence using rev_comp, resulting in rev_comp_DNA_SEQ
+
+  Add the index from R2 and the index from R3 to the end of the header lines for both R1 and R4:
+    store as variable NEW_HEADER_LINE on BOTH R1 and R4, so in total you'll have 2 new header lines (one for R1, one for R4)
+
+  Check to see if the index from R2 and rev_comp_DNA_SEQ of R3 is in the index file:
+    if yes:
+
+      CHECK TO SEE IF THE QUALITY SCORES ARE ABOVE THE THRESHOLD:
+      for each quality score in the quality score line of R2:
+        use convert_phred to get a running sum of all of the quality scores for that read and get the average
+          if the average quality score < THRESHOLD:
+            place the record with the updated header line into undetermined_<index-pair>
+          else:
+            pass onto the rest of the conditions below that match the indexes to each other
+      for each quality score in L4 of R3:
+        use convert_phred to get a running sum of all of the quality scores
+          if the average quality score < THRESHOLD:
+            place the record with the updated header line into undetermined_<index-pair>
+          else:
+            pass onto the rest of the conditions below that match the indexes to each other
+
+      CHECK TO SEE IF THE INDEXES MATCH EACH OTHER:
+      if the index from R2 == rev_comp_DNA_SEQ index from R3:
+        take the record with the new header line and place it into paired_<index-pair>
+        update the value in the dictionary
+        paired reads +=1 to count the number of paired reads
+      elif the index from r2 != rev_comp_DNA_SEQ index from R3:
+        take the record with the new header line and place it into swapped_<index-pair>
+        update the value in the dictionary
+        swapped +=1 1 to count the reads that were swapped indicating index hopping
+    else (if L2 does NOT match to index.txt):
+      take the record with the new header line and place it into undetermined_<index-pair>
+      this will not be added to the dictionary
+      undetermined +=1 to count the number of undetermined reads
