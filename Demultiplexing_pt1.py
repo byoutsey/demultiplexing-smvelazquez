@@ -28,7 +28,7 @@ def convert_phred(letter):
 
 #READ_LENGTH = 101
 #NUMBER_OF_RECORDS = ##
-i = 0
+i = 0     #make variable name more descriptive (line_counter)
 record_count = 0
 
 all_qscores = np.zeros(args.read_length)
@@ -39,7 +39,7 @@ with gzip.open(args.FILEPATH, 'rt') as fh:
         line = line.strip('\n')#line.decode("utf8").strip('\n')
         if i%4 == 0:
             record_count +=1
-            for character in range(len(line)):
+            for character in range(len(line)): 
                 letter = line[character] #takes the index value of the number and pulls out the actual letter associated with it
                 y = convert_phred(letter)
                 all_qscores[character] += y
@@ -56,5 +56,5 @@ for item in range(len(all_qscores)):
 #     plt.ylabel('Average Quality Score')
 #     plt.savefig(HISTOGRAM_NAME + ".pdf")
 
-plt.bar(range(len(average_qscores)), average_qscores)
+plt.bar(range(len(average_qscores)), average_qscores) #Add axis/main titles
 plt.savefig(args.HISTOGRAM_NAME + ".pdf")
