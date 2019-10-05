@@ -19,6 +19,7 @@ def get_args():
      parser.add_argument('-H', "--HISTOGRAM_NAME", help = "the name of your inputted file will be generated into a pdf histogram", required = True)
      return parser.parse_args()
 
+#input variables "r" and "n" can be determined in this script. Making them required inputs only complicates the terminal. 
 args = get_args()
 
 def convert_phred(letter):
