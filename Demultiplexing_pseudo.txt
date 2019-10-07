@@ -7,6 +7,7 @@
 - algorithm needs to report the number of read pairs w/properly matched pairs
 - number of index hopping events
 - and the number of unknowns
+#Referencing R1, R2, etc in the description of outputs would be helpful 
 
 R1 = first biological read
 R2 = index that corresponds to R1
@@ -23,12 +24,14 @@ return(rev_comp_DNA_SEQ)
 
 def convert_phred(ASCII_SEQ):
 '''this will return the phred scores into the ascii equivalents'''
+#Is this Phred33? 
 use ord to convert the quality scores into their numerical equivalents
 return(CONVERTED_ASCII_SEQ)
 
 def indexed_header(index1, index2):
   '''This will convert your original head for any header you pass it to the header that contains its paired indexes'''
   your old header will have index1 + index2 separated by a hyphen
+  #An example would help describe this function better
   index_count = a dictionary that will count the index pairs as the keys and the number of times they appear as the values
     - set the dictionary such that the default will be the index pair and the value will be zeros
       - every time a new index pair is found, it'll be added to the dictionary and the zero will be updated to 1
@@ -41,6 +44,9 @@ undetermined = 0
 swapped = 0
 
 NOTE: IMPORTANT -- YOU SHOULD HAVE 24 PAIRED INDEX FILES (one for each index), AND YOU SHOULD COUNT THE NUMBER OF TIMES THESE PAIRS OCCURRED
+
+#what is the point of counting index pairs in a dict? To confirm the script processed all the reads? Explain how it is used in the code below. 
+
 read through all four files, pull out the first four lines of each file and store them into corresponding lists:
   R1 = [L1, L2, L3, L4]
   R2 = [L1, L2, L3, L4]
@@ -48,16 +54,20 @@ read through all four files, pull out the first four lines of each file and stor
   - use <filename>.readline() to pull out each individual line
   - set the lists locally so they are updated every time you get to a new record
   - L1 = header line, L2 = index, L3, = +, L4 = quality score
+  
 
   for each DNA sequence in R3:
     convert each DNA sequence using rev_comp, resulting in rev_comp_DNA_SEQ
 
   Add the index from R2 and the index from R3 to the end of the header lines for both R1 and R4:
     store as variable NEW_HEADER_LINE on BOTH R1 and R4, so in total you'll have 2 new header lines (one for R1, one for R4)
+#How are you going to do this? With the for iterating through R3? 
 
   Check to see if the index from R2 and rev_comp_DNA_SEQ of R3 is in the index file:
+  #what is the index file? Is this from the dict you made? 
     if yes:
-
+    #is there an else condition for this statement? 
+    
       CHECK TO SEE IF THE QUALITY SCORES ARE ABOVE THE THRESHOLD:
       for each quality score in the quality score line of R2:
         use convert_phred to get a running sum of all of the quality scores for that read and get the average
